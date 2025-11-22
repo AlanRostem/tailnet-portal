@@ -7,21 +7,42 @@ import (
 	"tailscale.com/client/tailscale/v2"
 )
 
-func FetchDevices(config *Config) ([]tailscale.Device, error) {
+type DeviceInfo struct {
+	Hostname string
+	Href     string
+	Alias    string
+}
+
+func FetchDevices(config *Config) ([]DeviceInfo, error) {
 	client := &tailscale.Client{
 		Tailnet: config.Tailnet,
 		APIKey:  config.APIKey,
 	}
-	devices, err := client.Devices().List(context.Background())
+	tsDevices, err := client.Devices().List(context.Background())
 	if err != nil {
 		return nil, err
 	}
-	for i, dev := range devices {
+	devices := make([]DeviceInfo, 0)
+	for _, dev := range tsDevices {
+		exclude := false
 		for _, ex := range config.ExcludedDeviceNames {
 			if strings.Contains(dev.Name, ex) {
-				devices = append(devices[:i], devices[i+1:]...)
+				exclude = true
+				break
 			}
 		}
+		if exclude {
+			continue
+		}
+		alias := dev.Hostname
+		if cfg, ok := config.DeviceConfigs[dev.Hostname]; ok {
+			alias = cfg.Alias
+		}
+		devices = append(devices, DeviceInfo{
+			Href:     dev.Name,
+			Hostname: dev.Hostname,
+			Alias:    alias,
+		})
 	}
 	return devices, nil
 }

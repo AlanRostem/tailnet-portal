@@ -5,10 +5,15 @@ import (
 	"os"
 )
 
+type DeviceConfig struct {
+	Alias string
+}
+
 type Config struct {
 	Tailnet             string
 	APIKey              string
 	ExcludedDeviceNames []string
+	DeviceConfigs       map[string]DeviceConfig
 }
 
 func NewConfig(path string) (*Config, error) {
