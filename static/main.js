@@ -5,10 +5,12 @@ document.body.onload = () => {
     })
     .then((json) => {
       console.log(json);
-      document.body.className = "links-container";
+      let container = document.createElement("div");
+      container.className = "links-container";
+      document.body.appendChild(container);
       for (let device of json) {
         let span = document.createElement("span");
-        document.body.appendChild(span);
+        container.appendChild(span);
         let img = document.createElement("img");
         img.src = "icons/" + device.Hostname + ".png";
         const SIZE = 32;
