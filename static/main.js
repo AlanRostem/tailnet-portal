@@ -5,11 +5,15 @@ document.body.onload = () => {
     })
     .then((json) => {
       console.log(json);
+      document.body.className = "links-container";
       for (let device of json) {
         let span = document.createElement("span");
         document.body.appendChild(span);
         let img = document.createElement("img");
-        img.src = "icons/" + device.Hostname;
+        img.src = "icons/" + device.Hostname + ".png";
+        const SIZE = 32;
+        img.width = SIZE;
+        img.height = SIZE;
         span.appendChild(img);
         let a = document.createElement("a");
         a.href = "http://" + device.Href;
