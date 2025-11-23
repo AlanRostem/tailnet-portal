@@ -7,15 +7,15 @@ import (
 	"net/http"
 )
 
-func StartServer() error {
+func StartServer(configPath string) error {
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 
+	config, err := NewConfig(configPath)
+	if err != nil {
+		return err
+	}
 	http.HandleFunc("/devices", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		config, err := NewConfig("./config.json")
-		if err != nil {
-			log.Fatal(err)
-		}
 		devices, err := FetchDevices(config)
 		if err != nil {
 			log.Fatal(err)
@@ -26,5 +26,5 @@ func StartServer() error {
 		}
 		fmt.Fprint(w, string(marshaled))
 	})
-	return http.ListenAndServe("0.0.0.0:5000", nil)
+	return http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", config.Port), nil)
 }

@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	if err := StartServer(); err != nil {
+	if err := StartServer("./config.json"); err != nil {
 		log.Fatal(err)
 	}
 }

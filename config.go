@@ -13,6 +13,7 @@ type DeviceConfig struct {
 type Config struct {
 	Tailnet string
 	APIKey  string
+	Port    string
 	Devices []DeviceConfig
 }
 
