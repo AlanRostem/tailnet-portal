@@ -5,26 +5,22 @@ document.body.onload = () => {
     })
     .then((json) => {
       console.log(json);
-      let container = document.createElement("div");
-      container.className = "links-container";
-      document.body.appendChild(container);
+      let container = document.getElementById("container");
       for (let device of json) {
-        let span = document.createElement("span");
-        container.appendChild(span);
+        let a = document.createElement("a");
+        a.className = "link-span";
+        a.href = "http://" + device.Href;
+        container.appendChild(a);
         let img = document.createElement("img");
         img.src = "icons/" + device.Hostname + ".png";
-        const SIZE = 32;
-        img.width = SIZE;
-        img.height = SIZE;
-        span.appendChild(img);
-        let a = document.createElement("a");
-        a.href = "http://" + device.Href;
+        a.appendChild(img);
+        let p = document.createElement("p");
         if (device.Alias) {
-          a.innerHTML = device.Alias;
+          p.innerHTML = device.Alias;
         } else {
-          a.innerHTML = device.Hostname;
+          p.innerHTML = device.Hostname;
         }
-        span.appendChild(a);
+        a.appendChild(p);
       }
     });
 };

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"strings"
 
 	"tailscale.com/client/tailscale/v2"
 )
@@ -23,20 +22,22 @@ func FetchDevices(config *Config) ([]DeviceInfo, error) {
 		return nil, err
 	}
 	devices := make([]DeviceInfo, 0)
-	for _, dev := range tsDevices {
-		exclude := false
-		for _, ex := range config.ExcludedDeviceNames {
-			if strings.Contains(dev.Name, ex) {
-				exclude = true
+
+	for _, devConfig := range config.Devices {
+		var dev *tailscale.Device = nil
+		var hostname = devConfig.Hostname
+		for _, tsDev := range tsDevices {
+			if tsDev.Hostname == hostname {
+				dev = &tsDev
 				break
 			}
 		}
-		if exclude {
+		if dev == nil {
 			continue
 		}
 		alias := dev.Hostname
-		if cfg, ok := config.DeviceConfigs[dev.Hostname]; ok {
-			alias = cfg.Alias
+		if devConfig.Alias != "" {
+			alias = devConfig.Alias
 		}
 		devices = append(devices, DeviceInfo{
 			Href:     dev.Name,

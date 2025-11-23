@@ -6,14 +6,14 @@ import (
 )
 
 type DeviceConfig struct {
-	Alias string
+	Hostname string
+	Alias    string
 }
 
 type Config struct {
-	Tailnet             string
-	APIKey              string
-	ExcludedDeviceNames []string
-	DeviceConfigs       map[string]DeviceConfig
+	Tailnet string
+	APIKey  string
+	Devices []DeviceConfig
 }
 
 func NewConfig(path string) (*Config, error) {

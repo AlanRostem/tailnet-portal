@@ -33,4 +33,4 @@ go.work.sum
 
 # User
 config.json
-/assets
+/static/icons/*
